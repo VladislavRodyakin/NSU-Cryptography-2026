@@ -80,7 +80,6 @@ def compute_file_entropy(filepath: str):
 
 def generate_test_files():
     """Создаёт тестовые файлы для проверки энтропии."""
-    # Targets the folder containing this specific script
     script_dir = Path(__file__).resolve().parent
     test_dir = script_dir / "test_files"
 
