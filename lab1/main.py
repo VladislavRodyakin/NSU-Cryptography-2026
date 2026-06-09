@@ -2,9 +2,11 @@ import os
 import re
 import string
 
-# ---------- Шифр Цезаря ----------
+
 def caesar_shift(char: str, key: int, encrypt: bool = True) -> str:
-    """Сдвиг одного символа (только латинские буквы)."""
+    """LATIN ONLY
+    One-symbol shift.
+    """
     if not char.isalpha() or char not in string.ascii_letters:
         return char
     base = ord('A') if char.isupper() else ord('a')
@@ -17,17 +19,15 @@ def caesar_encrypt(plaintext: str, key: int) -> str:
 def caesar_decrypt(ciphertext: str, key: int) -> str:
     return ''.join(caesar_shift(c, key, False) for c in ciphertext)
 
-# ---------- Атака 1: известный открытый текст ----------
+
 def known_plaintext_attack(plain: str, cipher: str):
-    """Определить ключ по паре открытого и зашифрованного текстов."""
-    # Ищем первую букву
     for p, c in zip(plain, cipher):
         if p.isalpha() and c.isalpha():
             p_base = ord('A') if p.isupper() else ord('a')
             c_base = ord('A') if c.isupper() else ord('a')
-            # Вычисляем ключ: (c - p) mod 26
+            
             key = (ord(c) - c_base - (ord(p) - p_base)) % 26
-            # Проверяем весь текст на согласованность
+            
             for pp, cc in zip(plain, cipher):
                 if pp.isalpha() and cc.isalpha():
                     pp_shifted = caesar_shift(pp, key, True)
@@ -35,10 +35,11 @@ def known_plaintext_attack(plain: str, cipher: str):
                         print("Ошибка: тексты не соответствуют одному ключу Цезаря.")
                         return None
             return key
+        
     print("Не найдено ни одной буквы для определения ключа.")
     return None
 
-# ---------- Атака 2: только шифрованный текст (перебор) ----------
+
 def brute_force_all(ciphertext: str):
     """Вывод всех 26 вариантов расшифрования."""
     print("\nВсе возможные расшифровки:")
@@ -46,8 +47,7 @@ def brute_force_all(ciphertext: str):
         plain = caesar_decrypt(ciphertext, key)
         print(f"Ключ {key:2d}: {plain}")
 
-# ---------- Атака 3: автоматический подбор по словарю ----------
-# Встроенный список частых английских слов (будет использован при отсутствии файла)
+
 FALLBACK_WORDS = {
     "the", "be", "to", "of", "and", "a", "in", "that", "have", "i",
     "it", "for", "not", "on", "with", "he", "as", "you", "do", "at",
@@ -74,7 +74,6 @@ def load_dictionary(filepath="words.txt"):
 
 def score_decryption(text: str, dictionary: set) -> int:
     """Оценка расшифрованного текста: количество слов, найденных в словаре."""
-    # Извлекаем слова (только буквы) и приводим к нижнему регистру
     words = re.findall(r'[a-zA-Z]+', text)
     words_lower = [w.lower() for w in words]
     return sum(1 for w in words_lower if w in dictionary)
@@ -110,9 +109,9 @@ def auto_crack(ciphertext: str, dictionary: set):
         for key in best_keys:
             print(f"Ключ {key}: {results[key][1]}")
 
-# ---------- Консольный интерфейс ----------
+
 def main():
-    dictionary = None  # ленивая загрузка
+    dictionary = None
 
     while True:
         print("\n" + "="*50)
