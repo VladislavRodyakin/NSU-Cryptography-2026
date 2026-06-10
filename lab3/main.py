@@ -1,8 +1,6 @@
 import random
 import time
 
-# Вспомогательные функции
-
 def generate_lcg_bytes(size: int, seed: int = None) -> bytes:
     """
     Линейный конгруэнтный генератор (LCG) с параметрами из glibc.

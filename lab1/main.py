@@ -4,7 +4,8 @@ import string
 
 
 def caesar_shift(char: str, key: int, encrypt: bool = True) -> str:
-    """LATIN ONLY
+    """
+    LATIN ONLY
     One-symbol shift.
     """
     if not char.isalpha() or char not in string.ascii_letters:
@@ -172,3 +173,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
